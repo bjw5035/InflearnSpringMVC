@@ -39,9 +39,10 @@ public class FrontControllerServletV4 extends HttpServlet {
 		// 모델 객체 전달(프론트 컨트롤러에서 생성해서 넘겨줌. 컨트롤러에서 모델객체에 값을 담으면 여기에 그대로 담겨있음)
 		Map<String, Object> model = new HashMap<>();
 
+		/*컨트롤러가 직접 뷰의 논리 이름을 반환, 이 값을 사용해서 실제 물리 뷰를 찾을 수 있다.*/
 		String viewName = controller.process(paramMap, model);
-
 		MyView view = viewResolver(viewName);
+
 		view.render(model, request, response);
 	}
 
