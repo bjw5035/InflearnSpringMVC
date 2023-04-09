@@ -3,7 +3,9 @@ package hello.servlet.web.frontcontroller.v5;
 import hello.servlet.web.frontcontroller.ModelView;
 import hello.servlet.web.frontcontroller.MyView;
 import hello.servlet.web.frontcontroller.v3.controller.MemberFormControllerV3;
+import hello.servlet.web.frontcontroller.v4.controller.MemberFromControllerV4;
 import hello.servlet.web.frontcontroller.v5.adapter.ControllerV3HandlerAdapter;
+import hello.servlet.web.frontcontroller.v5.adapter.ControllerV4HandlerAdapter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -37,10 +39,16 @@ public class FrontControllerServletV5 extends HttpServlet {
         handlerMappingMap.put("/front-controller/v5/v3/members/new-form", new MemberFormControllerV3());
         handlerMappingMap.put("/front-controller/v5/v3/members/save", new MemberFormControllerV3());
         handlerMappingMap.put("/front-controller/v5/v3/members/members", new MemberFormControllerV3());
+
+        // V4 추가
+        handlerMappingMap.put("/front-controller/v5/v4/members/new-form", new MemberFromControllerV4());
+        handlerMappingMap.put("/front-controller/v5/v4/members/save", new MemberFromControllerV4());
+        handlerMappingMap.put("/front-controller/v5/v4/members/members", new MemberFromControllerV4());
     }
 
     private void initHandlerAdapters() {
         handlerAdapters.add(new ControllerV3HandlerAdapter());
+        handlerAdapters.add(new ControllerV4HandlerAdapter());
     }
 
     @Override
@@ -52,20 +60,21 @@ public class FrontControllerServletV5 extends HttpServlet {
         }
 
         MyHandlerAdapter adapter = getHandlerAdapter(handler);
+        /*
+        * 어댑터 호출
+        * 어댑터의 handle(request, response, handler) 메서드를 통해 실제 어댑터가 호출된다.
+        * 어댑터는 handler(컨트롤러)를 호출하고 그 결과를 어댑터에 맞추어 반환한다.
+        * ControllerV3HandlerAdapter 의 경우 어댑터의 모양과 컨트롤러의 모양이 유사해서 변환 로직이 단순하다.
+        * */
         ModelView mv = adapter.handle(request, response, handler);
 
         MyView view = viewResolver(mv.getViewName());
         view.render(mv.getModel(), request, response);
     }
 
-    private MyView viewResolver(String viewName) {
-        return new MyView("/WEB-INF/views/" + viewName + ".jsp");
-    }
-
-
     /*
-    * 핸들러 매핑 정보인 handlerMappingMap에서 URL에 매핑된 핸들러(컨트롤러) 객체를 찾아서 반환한다.
-    * */
+     * 핸들러 매핑 정보인 handlerMappingMap에서 URL에 매핑된 핸들러(컨트롤러) 객체를 찾아서 반환한다.
+     * */
     private Object getHandler(HttpServletRequest request) {
         String requestURI = request.getRequestURI();
         return handlerMappingMap.get(requestURI);
@@ -79,4 +88,11 @@ public class FrontControllerServletV5 extends HttpServlet {
         }
         throw new IllegalArgumentException("handler adapter를 찾을 수 없습니다.handler=" + handler);
     }
+
+    private MyView viewResolver(String viewName) {
+        return new MyView("/WEB-INF/views/" + viewName + ".jsp");
+    }
+
+
+
 }

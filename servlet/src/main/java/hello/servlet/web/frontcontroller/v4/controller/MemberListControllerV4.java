@@ -2,6 +2,7 @@ package hello.servlet.web.frontcontroller.v4.controller;
 
 import hello.servlet.domain.member.Member;
 import hello.servlet.domain.member.MemberRepository;
+import hello.servlet.web.frontcontroller.ModelView;
 import hello.servlet.web.frontcontroller.v4.ControllerV4;
 
 import java.util.List;
@@ -18,5 +19,10 @@ public class MemberListControllerV4 implements ControllerV4 {
         model.put("members", members);
 
         return "members";
+    }
+
+    @Override
+    public ModelView process(String viewName) {
+        return null;
     }
 }
