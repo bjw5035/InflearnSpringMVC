@@ -12,8 +12,4 @@ public class MemberFromControllerV4 implements ControllerV4 {
         return "new-form";
     }
 
-    @Override
-    public ModelView process(String viewName) {
-        return null;
-    }
 }
